@@ -4,7 +4,6 @@ const app = new Hono();
 
 const TURNSTILE_SECRET = '0x4AAAAAABmNHKO15Y4NbK-JAw8T5pTpH9Y';
 
-// 主业务路由
 app.post('/api/verify-turnstile', async (c) => {
     const body = await c.req.json();
     const token = body.token;
@@ -28,7 +27,6 @@ app.post('/api/verify-turnstile', async (c) => {
     }
 });
 
-// CORS 支持，允许所��来源和基本跨域
 app.use('/*', async (c, next) => {
     await next();
     c.res.headers.set('Access-Control-Allow-Origin', '*');
@@ -37,10 +35,7 @@ app.use('/*', async (c, next) => {
 });
 app.options('/*', (c) => c.text('', 204));
 
-// 兜底路由：所有未命中的路径都返回 404
-app.all('*', (c) => c.json({ success: false, error: 'Not Found' }, 404));
-
-// Cloudflare Worker标准导出
+// export default app.fetch;
 export default {
     fetch: app.fetch
 }
