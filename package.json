@@ -1,7 +1,7 @@
 {
   "name": "turnstile-backend",
   "version": "1.0.0",
-  "private":true,
+  "private": true,
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,5 +12,8 @@
   "description": "",
   "dependencies": {
     "hono": "^4.9.6"
+  },
+  "devDependencies": {
+    "wrangler": "^4.33.2"
   }
 }
