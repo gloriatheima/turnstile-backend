@@ -33,9 +33,18 @@ app.use('/*', async (c, next) => {
     await next();
     c.res.headers.set('Access-Control-Allow-Origin', '*');
     c.res.headers.set('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-    c.res.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+    // 推荐允许所有头或者加上常用的
+    c.res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
 });
-app.options('/*', (c) => c.text('', 204));
+
+// 处理所有 OPTIONS 预检请求，并加上 CORS 响应头
+app.options('/*', (c) => {
+    return c.text('', 204, {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With'
+    });
+});
 
 // 兜底路由：所有未命中的路径都返回 404
 app.all('*', (c) => c.json({ success: false, error: 'Not Found' }, 404));
