@@ -7,7 +7,7 @@ const TURNSTILE_SECRET = '0x4AAAAAABmNHKO15Y4NbK-JAw8T5pTpH9Y';
 function setCORSHeaders(res) {
     res.headers.set('Access-Control-Allow-Origin', '*');
     res.headers.set('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-    res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With', 'X-Turnstile-Token');
+    res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With', 'x-turnstile-token');
 }
 
 app.post('/api/verify-turnstile', async (c) => {
