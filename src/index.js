@@ -92,7 +92,7 @@ app.post('/api/verify-turnstile', async (c) => {
                 success: data.success,
             ephemeral_id: eid,           // 核心：临时 ID
             'x-turnstile-eid': eid,      // 冗余一份 Header 名，方便你观察
-            'x-turnstile-token': clientTokenHeader, // 确认后端收到了你前端发的头
+            'x-turnstile-token': token, // 确认后端收到了你前端发的头
             from_worker: true,
             full_data: data              // 打印 Cloudflare 返回的所有原始字段
             });
