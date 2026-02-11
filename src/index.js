@@ -1,7 +1,15 @@
 import { Hono } from 'hono';
+import { cors } from 'hono/cors'
 
 const app = new Hono();
 const TURNSTILE_SECRET = '0x4AAAAAABmNHKO15Y4NbK-JAw8T5pTpH9Y';
+
+app.use('/*', cors({
+  origin: 'https://turnstile.gloriatrials.com',
+  allowMethods: ['POST', 'GET', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'x-turnstile-token'], // 必须包含你前端发的这个头
+  exposeHeaders: ['x-turnstile-eid'], // 必须暴露，前端才拿得到 ID
+}));
 
 // 定义一个工具函数，添加 CORS 头
 // function setCORSHeaders(res) {
@@ -93,7 +101,7 @@ app.post('/api/verify-turnstile', async (c) => {
     }
 });
 
-// OPTIONS 必须�� CORS
+// OPTIONS 必须配置 CORS
 app.options('/*', (c) => {
     setCORSHeaders(c.res);
     return c.text('', 204);
