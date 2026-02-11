@@ -82,7 +82,7 @@ app.post('/api/verify-turnstile', async (c) => {
 
         if (data.success) {
             // --- 核心改动 ---
-            const eid = data.ephemeral_id || '';
+            const eid = data.metadata?.ephemeral_id || data.ephemeral_id || ""
             if (eid) {
                 // 将 EID 放入 Header，供 WAF 频率限制使用
                 c.header('x-turnstile-eid', eid);
