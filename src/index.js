@@ -85,16 +85,21 @@ app.post('/api/verify-turnstile', async (c) => {
             const eid = data.metadata?.ephemeral_id || data.ephemeral_id || ""
             if (eid) {
                 // 将 EID 放入 Header，供 WAF 频率限制使用
+                // 将校验结果和 Token 注入 Header
                 c.header('x-turnstile-eid', eid);
+                c.header('x-turnstile-token', token); // 将前端传来的 token 原路返回到 header
+
+                // 4. 关键：必须暴露这些 Header，否则前端浏览器 res.headers.get 会返回 null
+                c.header('Access-Control-Expose-Headers', 'x-turnstile-eid, x-turnstile-token');
             }
             // 同时也返回在 JSON 里，方便前端 Vue 存入 localStorage
             return c.json({ 
                 success: data.success,
-            ephemeral_id: eid,           // 核心：临时 ID
-            'x-turnstile-eid': eid,      // 冗余一份 Header 名，方便你观察
-            'x-turnstile-token': token, // 确认后端收到了你前端发的头
-            from_worker: true,
-            full_data: data              // 打印 Cloudflare 返回的所有原始字段
+                ephemeral_id: eid,           // 核心：临时 ID
+                'x-turnstile-eid': eid,      // 冗余一份 Header 名，方便你观察
+                'x-turnstile-token': token, // 确认后端收到了你前端发的头
+                from_worker: true,
+                full_data: data              // 打印 Cloudflare 返回的所有原始字段
             });
         } else {
             return c.json({ success: false, errors: data['error-codes'] }, 403);
