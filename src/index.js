@@ -89,9 +89,12 @@ app.post('/api/verify-turnstile', async (c) => {
             }
             // 同时也返回在 JSON 里，方便前端 Vue 存入 localStorage
             return c.json({ 
-                success: true, 
-                ephemeral_id: eid, // 确保 JSON 里有这个字段
-                from_worker: true 
+                success: data.success,
+            ephemeral_id: eid,           // 核心：临时 ID
+            'x-turnstile-eid': eid,      // 冗余一份 Header 名，方便你观察
+            'x-turnstile-token': clientTokenHeader, // 确认后端收到了你前端发的头
+            from_worker: true,
+            full_data: data              // 打印 Cloudflare 返回的所有原始字段
             });
         } else {
             return c.json({ success: false, errors: data['error-codes'] }, 403);
